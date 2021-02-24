@@ -1,5 +1,5 @@
 const db = require('./db');
-const helper = require('..helper');
+const helper = require('../helper');
 const config = require('../config');
 
 async function getMultiple(page = 1) {
@@ -18,6 +18,31 @@ async function getMultiple(page = 1) {
   };
 }
 
-module.exports = {
-  getMultiple
+async function create(programmingLanguage) {
+  const result = await db.query(
+    `INSERT INTO programming_languages
+    (name, released_year, githut_rank, pypl_rank, tiobe_rank)
+    VALUES
+    (?, ?, ?, ?, ?)`,
+    [
+      programmingLanguage.name,
+      programmingLanguage.released_year,
+      programmingLanguage.githut_rank,
+      programmingLanguage.pypl_rank,
+      programmingLanguage.tiboe_rank
+    ]
+  );
+
+  let message = 'Error in creating programming language';
+
+  if (result.affectedRows) {
+    message = 'Programming language created successfully';
+  }
+
+  return { message };
 }
+
+module.exports = {
+  getMultiple,
+  create
+};
